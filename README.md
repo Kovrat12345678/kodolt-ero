@@ -3,6 +3,8 @@
 > **LEGO animációs sorozat** — 1. évad, 3 részes történet
 > Készítő: **Zynox Studio**
 
+🌐 **Élő weboldal:** https://kovrat12345678.github.io/kodolt-ero/
+
 ---
 
 ## A sorozatról
@@ -37,68 +39,106 @@ Helyszín: **Techronica Neon City**
 
 - **Modern cyber design** neon effektekkel és animációkkal
 - **Visszaszámláló** premierig
-- **Karakter galéria**
-- **Előzetes oldal** (időzített megjelenés)
+- **Karakter galéria** (5 karakter)
+- **Előzetes oldal** (időzített megjelenés május 31-től)
 - **Jegyrendszer** család számára:
   1. Vásárló beírja a nevét
   2. Készítő beírja a titkos kódot (fizetés után)
-  3. Vásárló kap egyedi film-kódot
+  3. Vásárló kap egyedi film-kódot (a névből generálva)
   4. Premier napján a film-kóddal nézhető a film
-- **Admin felület** – jegyek, bevétel, kódok kezelése
 - **Mobil-kompatibilis** reszponzív design
 - **"Szivárgott felvétel"** szekció – Nexor által kiszivárogtatott videók
-
----
-
-## Telepítés
-
-### Követelmények
-- **XAMPP** (Apache + PHP 8.x)
-
-### Lépések
-
-1. Klónozd a repót a `C:\xampp\htdocs\` mappába:
-   ```bash
-   git clone https://github.com/Kovrat12345678/kodolt-ero.git "Zynox film"
-   ```
-
-2. Másold a `data/config.example.json`-t `data/config.json`-ra és állítsd be:
-   ```json
-   {
-       "titkos_kod": "VALAMI_TITKOS",
-       "admin_jelszo": "ERŐS_JELSZÓ",
-       "premier_datum": "2026-06-30T19:00:00",
-       "elozetes_datum": "2026-05-31T19:00:00",
-       "ar": 500
-   }
-   ```
-
-3. Hozz létre üres jegyek fájlt:
-   ```bash
-   echo "[]" > data/jegyek.json
-   ```
-
-4. Indítsd el az XAMPP Apache-t és nyisd meg:
-   ```
-   http://localhost/Zynox film/
-   ```
-
-### Videók (külön kell pótolni)
-
-A `.gitignore` kizárja a videókat (méret miatt). Töltsd be őket:
-- Előzetes: `elozetes/elozetes.mp4`
-- Film: `film/film.mp4`
-- Showcase: `video/video.mp4`, `video/video (1).mp4`
+- **Techronica Neon City** helyszín bemutatása
+- **3 epizód** infói egy szekcióban
 
 ---
 
 ## Technológia
 
-- **PHP 8.x** – backend, jegyrendszer
 - **HTML5 / CSS3** – animációk, neon effektek
-- **JavaScript** (vanilla) – visszaszámláló, videó vezérlés
-- **JSON fájl-tárolás** – jegyek és konfiguráció (nincs adatbázis)
+- **JavaScript (vanilla)** – jegykód generálás (SHA-256), visszaszámláló, videó vezérlés
+- **Web Crypto API** – kódhash-elés
+- **Nincs backend** – tisztán statikus, fut bárhol (GitHub Pages, Netlify, helyi szerver)
 - Betűtípusok: **Orbitron** (cím), **Rajdhani** (szöveg)
+
+---
+
+## Fájlstruktúra
+
+```
+kodolt-ero/
+├── index.html              # Főoldal
+├── karakterek.html         # Karakterek
+├── elozetes.html           # Előzetes
+├── jegyek.html             # Jegyvásárlás
+├── film.html               # Film + kód-ellenőrzés
+├── config.js               # Konfiguráció (dátumok, ár, kód-hash)
+├── site.js                 # Közös JS (header, footer, kódgen)
+├── styles.css              # Minden stílus
+├── favicon.svg             # Logó
+├── karakter képek/         # Karakter PNG/JPEG fájlok
+├── Techronica Neon City/   # Háttér képek
+├── video/                  # Showcase videók (kiszivárgott)
+├── elozetes/               # Előzetes videó (külön töltendő)
+└── film/                   # Film fájl (külön töltendő)
+```
+
+---
+
+## Helyi futtatás
+
+A weboldal **statikus**, így bármilyen webszerverrel működik:
+
+### XAMPP (Windows)
+1. Másold a mappát ide: `C:\xampp\htdocs\Zynox film\`
+2. Indítsd az Apache-t XAMPP Control Panel-ből
+3. Nyisd meg: `http://localhost/Zynox film/`
+
+### Python (gyors helyi szerver)
+```bash
+cd "kodolt-ero"
+python -m http.server 8000
+# → http://localhost:8000
+```
+
+### VS Code Live Server
+1. Telepítsd a "Live Server" extension-t
+2. Jobb klikk az `index.html`-en → "Open with Live Server"
+
+---
+
+## Beállítások (config.js)
+
+```javascript
+const CONFIG = {
+    PREMIER:  '2026-06-30T19:00:00',  // E01 premier
+    ELOZETES: '2026-05-31T19:00:00',  // Előzetes
+    EP2:      '2026-07-31T19:00:00',  // E02 premier
+    EP3:      '2026-09-01T19:00:00',  // E03 premier
+    AR: 500,                            // Jegy ára (Ft)
+    SECRET_HASH: 'bbe04e1...',          // Titkos kód SHA-256 hash
+    SALT: 'ZYNOX_SECRET_SALT_2026'      // Film-kód só (NE változtasd!)
+};
+```
+
+### Titkos kód módosítása
+1. Generálj új SHA-256 hash-t: https://emn178.github.io/online-tools/sha256.html
+2. Cseréld le a `SECRET_HASH` értéket a `config.js`-ben
+3. Pusholj: `git add config.js && git commit -m "Új titkos kód" && git push`
+
+---
+
+## Videók feltöltése
+
+A `.gitignore` kizárja a videókat (méret miatt). Manuálisan töltsd fel:
+
+- **Előzetes:** `elozetes/elozetes.mp4`
+- **Film:** `film/film.mp4`
+- **Showcase:** `video/video.mp4`, `video/video (1).mp4`
+
+GitHub web felületen: nyisd meg a megfelelő mappát → "Add file" → "Upload files" → drag & drop.
+
+⚠️ **Max 100 MB / fájl** GitHub-on. Nagyobb fájlokhoz használj YouTube embed-et vagy CDN-t.
 
 ---
 

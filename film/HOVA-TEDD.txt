@@ -1,15 +1,47 @@
 FILM VIDEÓ
 ==========
 
-Amikor kész lesz a film (június 30.), másold ide a videó fájlt
-és nevezd át "film.mp4"-re.
+Amikor kész lesz a film (2026. június 30.), másold ide
+és nevezd át: film.mp4
 
-A weboldal automatikusan felismeri és csak az érvényes
-film-kóddal rendelkezőknek mutatja.
+A weboldal csak az érvényes film-kóddal rendelkezőknek
+mutatja, és csak a premier dátumtól (2026.06.30 19:00).
+
+GITHUBRA FELTÖLTÉS:
+-------------------
+1. Menj ide: https://github.com/Kovrat12345678/kodolt-ero/tree/main/film
+2. "Add file" > "Upload files"
+3. Drag & drop a videót
+4. "Commit changes"
+
+Vagy parancssorból:
+  cd "C:/xampp/htdocs/Zynox film"
+  git add film/film.mp4
+  git commit -m "Film feltöltése"
+  git push
 
 Támogatott formátumok:
-- film.mp4 (ajánlott)
+- film.mp4   (ajánlott)
 - film.webm
 - film.mov
+
+⚠️  GitHub limit: max 100 MB / fájl!
+   Egy 20 perces film NAGYON valószínűleg több lesz.
+
+OPCIÓK NAGY FÁJLHOZ:
+--------------------
+1. YOUTUBE EMBED (ajánlott):
+   - Töltsd fel YouTube-ra "nem listázott" módban
+   - Cseréld le a film.html-ben a video tag-et iframe-re
+   - Csak akinek van linkje, az tudja megnézni
+
+2. GIT LFS (Large File Storage):
+   - Bonyolultabb, de működik nagy fájlokra
+   - https://git-lfs.com
+
+3. CLOUDFLARE STREAM / VIMEO:
+   - Profi videó hosting
+
+Szólj ha segítek beállítani!
 
 Ezt a TXT fájlt nyugodtan törölheted.

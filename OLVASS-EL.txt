@@ -1,60 +1,100 @@
-==========================================
+============================================
    KÓDOLT ERŐ – Weboldal használati útmutató
-==========================================
+============================================
 
-INDÍTÁS:
-1. XAMPP Control Panel → Apache → Start
-2. Böngészőben: http://localhost/Zynox%20film/
+ÉLŐ WEBOLDAL:
+-------------
+https://kovrat12345678.github.io/kodolt-ero/
+
+Ez 24/7 elérhető bárhonnan, telefonról, gépről, tabletről.
+A géped nem kell hogy be legyen kapcsolva!
+
+
+HELYI FUTTATÁS (XAMPP):
+-----------------------
+1. Indítsd az XAMPP Control Panel-t
+2. Nyomd Start gombot az Apache mellett
+3. Böngészőben: http://localhost/Zynox%20film/
+
 
 OLDALAK:
 --------
-- Főoldal:        http://localhost/Zynox%20film/
-- Karakterek:     http://localhost/Zynox%20film/karakterek.php
-- Előzetes:       http://localhost/Zynox%20film/elozetes.php
-- Jegyvásárlás:   http://localhost/Zynox%20film/jegyek.php
-- Film:           http://localhost/Zynox%20film/film.php
-- ADMIN:          http://localhost/Zynox%20film/admin.php
+- Főoldal:       index.html
+- Karakterek:    karakterek.html
+- Előzetes:      elozetes.html
+- Jegyvásárlás:  jegyek.html
+- Film:          film.html
 
-FONTOS BEÁLLÍTÁSOK (admin.php-n keresztül):
--------------------------------------------
-- Admin alap jelszó:   admin123
-- Titkos kód alapból:  ZYNOX2026
-- Premier dátum:       2026-06-30 19:00
-- Előzetes dátum:      2026-05-31 19:00
-- Ár:                  500 Ft
-
-VÁLTOZTASD MEG ezeket az admin felületen vagy a
-data/config.json fájlban!
 
 JEGYVÁSÁRLÁS FOLYAMATA:
 -----------------------
-1. A családtag beírja a nevét a jegyek.php oldalon
-2. A rendszer kéri a "titkos kódot"
-3. TE beírod a titkos kódot (ZYNOX2026 alapból),
-   miután kifizették az 500 Ft-ot itthon
-4. A rendszer ad egy egyedi film-kódot (pl. ZNX-A1B2C3D4)
-5. Június 30-án a film.php oldalon ezzel néznek filmet
+1. A családtag megnyitja a jegyek.html-t
+2. Beírja a nevét
+3. A rendszer kéri a "titkos kódot"
+4. TE beírod a titkos kódot (alap: ZYNOX2026)
+   miután kifizették az 500 Ft-ot
+5. A rendszer ad egy egyedi film-kódot (pl. ZNX-A1B2C3D4)
+   - A kód a NÉVből generálódik (mindig ugyanaz lesz!)
+6. Júnir 30-án a film.html-en beírja a NEVÉT + a film-KÓDOT
+7. Nézheti a filmet
+
+
+FONTOS:
+-------
+A film-kód a NÉVBŐL generálódik determinisztikusan.
+Tehát ha "Kiss Anna" néven vásárol, a film oldalon is
+"Kiss Anna"-t írjon (kis-/nagybetű mindegy, de a sorrend
+és a szóközök számítanak).
+
+
+BEÁLLÍTÁSOK MÓDOSÍTÁSA (config.js):
+------------------------------------
+A config.js fájlban ezek vannak:
+- PREMIER       = E01 premier dátuma
+- ELOZETES      = előzetes dátuma
+- EP2, EP3      = E02, E03 dátumok
+- AR            = jegy ára Ft-ban
+- SECRET_HASH   = titkos kód hash-e
+- SALT          = ne változtasd!
+
+
+TITKOS KÓD MÓDOSÍTÁSA:
+----------------------
+1. Generálj SHA-256 hash-t az új kódból:
+   https://emn178.github.io/online-tools/sha256.html
+2. Másold be a config.js SECRET_HASH értékébe
+3. Push GitHub-ra:
+   git add config.js
+   git commit -m "Új titkos kód"
+   git push
+
 
 VIDEÓK FELTÖLTÉSE:
 ------------------
-- Előzetes: tedd a "elozetes/elozetes.mp4" fájlt
-- Film:     tedd a "film/film.mp4" fájlt
+- Előzetes:  elozetes/elozetes.mp4
+- Film:      film/film.mp4
+- Showcase:  video/video.mp4, video/video (1).mp4
 
-A weboldal automatikusan felismeri és megjeleníti
-(az előzetest május 31-től, a filmet június 30-tól).
+A weboldal automatikusan felismeri.
+Max 100 MB / fájl GitHub-on!
 
-KARAKTER KÉPEK:
+
+GITHUB REPO:
+------------
+https://github.com/Kovrat12345678/kodolt-ero
+
+Itt láthatod a teljes forráskódot.
+Ha bármit változtatsz helyileg, push-olnod kell:
+  git add .
+  git commit -m "Változtatás leírása"
+  git push
+
+
+HASZNOS LINKEK:
 ---------------
-A "karakter képek" mappában vannak. Ha új képet
-adsz hozzá, módosítsd a karakterek.php fájlt.
+- Élő weboldal:    https://kovrat12345678.github.io/kodolt-ero/
+- GitHub repo:     https://github.com/Kovrat12345678/kodolt-ero
+- SHA-256 gen:     https://emn178.github.io/online-tools/sha256.html
 
-ADMIN FELÜLET:
---------------
-Itt látod az eladott jegyeket, módosíthatod a kódot,
-az árat és a dátumokat.
-A bevételt is mutatja!
 
-JEGYEK ADATBÁZIS:
------------------
-data/jegyek.json – itt vannak az eladott jegyek
-data/config.json – beállítások
+© 2026 Zynox Studio · Kódolt Erő

@@ -1,14 +1,32 @@
 ELŐZETES VIDEÓ
 ==============
 
-Amikor kész lesz az előzetes (május 31.), másold ide a videó fájlt
-és nevezd át "elozetes.mp4"-re.
+Amikor kész lesz az előzetes (2026. május 31.), másold ide
+és nevezd át: elozetes.mp4
 
-A weboldal automatikusan felismeri és megjeleníti.
+A weboldal automatikusan felismeri:
+- Helyi: http://localhost/Zynox%20film/elozetes.html
+- Online: https://kovrat12345678.github.io/kodolt-ero/elozetes.html
+
+GITHUBRA FELTÖLTÉS:
+-------------------
+1. Menj ide: https://github.com/Kovrat12345678/kodolt-ero/tree/main/elozetes
+2. "Add file" > "Upload files"
+3. Drag & drop a videót
+4. "Commit changes"
+
+Vagy parancssorból:
+  cd "C:/xampp/htdocs/Zynox film"
+  git add elozetes/elozetes.mp4
+  git commit -m "Előzetes feltöltése"
+  git push
 
 Támogatott formátumok:
-- elozetes.mp4 (ajánlott)
+- elozetes.mp4  (ajánlott, jól játszik mobilon is)
 - elozetes.webm
 - elozetes.mov
+
+⚠️  GitHub limit: max 100 MB / fájl
+   Nagyobb fájlhoz YouTube embed-et használj.
 
 Ezt a TXT fájlt nyugodtan törölheted.
