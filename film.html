@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Film – Kódolt Erő</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="favicon.svg">
+    <meta name="theme-color" content="#0a0a14">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body data-page="film">
+    <div class="cyber-bg"></div>
+    <div class="grid-overlay"></div>
+
+    <div id="site-header"></div>
+
+    <main class="main-content">
+
+        <section class="hero" style="padding: 3rem 1rem;">
+            <h1 class="hero-title" style="font-size: clamp(2.5rem, 7vw, 5rem);">A FILM</h1>
+            <p class="hero-subtitle">Kódolt Erő – A Sötét Program</p>
+            <p class="hero-episode">1. évad – 1. rész</p>
+        </section>
+
+        <section class="section" id="content"></section>
+
+    </main>
+
+    <div id="site-footer"></div>
+
+    <script src="config.js"></script>
+    <script src="site.js"></script>
+    <script>
+    (async () => {
+        const premier = lejartE(CONFIG.PREMIER);
+        const content = document.getElementById('content');
+
+        async function findVideo() {
+            for (const url of ['film/film.mp4','film/film.webm','film/film.mov']) {
+                try {
+                    const r = await fetch(url, { method: 'HEAD' });
+                    if (r.ok) return url;
+                } catch (e) {}
+            }
+            return null;
+        }
+
+        function renderForm(message = '') {
+            content.innerHTML = `
+                <div class="jegyek-container">
+                    <div class="ticket-card">
+                        <div class="ticket-header">
+                            <h2 class="ticket-title">FILM-KÓD</h2>
+                            <p class="ticket-subtitle">Add meg a neved és a film-kódot</p>
+                        </div>
+                        ${!premier ? `
+                        <div class="alert alert-info" style="text-align: center;">
+                            A film <strong>${formatDatum(CONFIG.PREMIER)}</strong> időpontban indul.<br>
+                            Most már be tudod írni a kódodat – ellenőrizzük, és majd a premier napján megnézheted!
+                        </div>` : ''}
+                        ${message}
+                        <form id="filmForm">
+                            <div class="form-group">
+                                <label class="form-label" for="nev">Neved (ahogy a jegyvásárláskor megadtad)</label>
+                                <input type="text" class="form-input" id="nev" required minlength="2" autocomplete="name">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="kod">Film-kód</label>
+                                <input type="text" class="form-input" id="kod" placeholder="ZNX-XXXXXXXX" required
+                                       style="font-family: 'Orbitron', sans-serif; letter-spacing: 3px; text-align: center; text-transform: uppercase;"
+                                       maxlength="12">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-full">
+                                ${premier ? 'Megnézem a filmet' : 'Kód ellenőrzése'}
+                            </button>
+                        </form>
+                        <p style="text-align: center; margin-top: 1.5rem; color: var(--text-secondary);">
+                            Még nincs kódod? <a href="jegyek.html" style="color: var(--neon-cyan);">Vegyél jegyet!</a>
+                        </p>
+                    </div>
+                </div>`;
+
+            document.getElementById('filmForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const nev = document.getElementById('nev').value.trim();
+                const kod = document.getElementById('kod').value.trim();
+
+                const ok = await verifyFilmKod(nev, kod);
+
+                if (!ok) {
+                    renderForm(`<div class="alert alert-error">Hibás kód vagy név! Ellenőrizd, hogy pontosan a regisztrációkor használt neved és a kapott film-kódot adtad-e meg.</div>`);
+                    return;
+                }
+
+                // Mentsük el sessionbe, hogy frissítés után is működjön
+                sessionStorage.setItem('film_nev', nev);
+                sessionStorage.setItem('film_kod', kod);
+
+                if (!premier) {
+                    renderWaiting(nev);
+                } else {
+                    renderFilm(nev);
+                }
+            });
+        }
+
+        function renderWaiting(nev) {
+            content.innerHTML = `
+                <div class="locked-content">
+                    <div class="locked-icon">[ KÓD ELFOGADVA ]</div>
+                    <h2 class="locked-title">Üdv, ${nev}!</h2>
+                    <p class="locked-text">
+                        A kódod <strong style="color: var(--neon-green);">érvényes</strong> –
+                        a film <strong style="color: var(--neon-cyan);">${formatDatum(CONFIG.PREMIER)}</strong>
+                        időpontban válik elérhetővé.
+                    </p>
+                    <div class="countdown">
+                        <div class="countdown-item"><span class="countdown-number" id="f-d">--</span><span class="countdown-label">Nap</span></div>
+                        <div class="countdown-item"><span class="countdown-number" id="f-h">--</span><span class="countdown-label">Óra</span></div>
+                        <div class="countdown-item"><span class="countdown-number" id="f-m">--</span><span class="countdown-label">Perc</span></div>
+                        <div class="countdown-item"><span class="countdown-number" id="f-s">--</span><span class="countdown-label">Másodperc</span></div>
+                    </div>
+                    <p style="margin-top: 1.5rem; color: var(--text-muted);">
+                        A kódod megjegyezve – jelentkezés nélkül megtekintheted, ha eljön az idő.
+                    </p>
+                </div>`;
+            visszaszamlal(CONFIG.PREMIER, ['f-d','f-h','f-m','f-s']);
+        }
+
+        async function renderFilm(nev) {
+            const url = await findVideo();
+            if (!url) {
+                content.innerHTML = `
+                    <div class="locked-content">
+                        <div class="locked-icon">[ ! ]</div>
+                        <h2 class="locked-title">A kód érvényes</h2>
+                        <p class="locked-text">
+                            Üdv, ${nev}!<br>
+                            A filmfájl még nincs feltöltve. Hamarosan elérhető!
+                        </p>
+                    </div>`;
+                return;
+            }
+            content.innerHTML = `
+                <div class="alert alert-success" style="max-width: 800px; margin: 0 auto 2rem;">
+                    <strong>Üdv, ${nev}!</strong> Jó szórakozást a filmhez!
+                </div>
+                <div class="video-container">
+                    <div class="video-wrapper">
+                        <video controls autoplay>
+                            <source src="${url}" type="video/mp4">
+                        </video>
+                    </div>
+                </div>`;
+        }
+
+        // Volt mentett jelentkezés?
+        const mentettNev = sessionStorage.getItem('film_nev');
+        const mentettKod = sessionStorage.getItem('film_kod');
+        if (mentettNev && mentettKod) {
+            const ok = await verifyFilmKod(mentettNev, mentettKod);
+            if (ok) {
+                if (premier) {
+                    renderFilm(mentettNev);
+                } else {
+                    renderWaiting(mentettNev);
+                }
+                return;
+            }
+        }
+
+        if (!premier) {
+            renderForm();
+        } else {
+            const url = await findVideo();
+            if (url) {
+                renderForm();
+            } else {
+                content.innerHTML = `
+                    <div class="locked-content">
+                        <div class="locked-icon">[ ! ]</div>
+                        <h2 class="locked-title">A premier ma van</h2>
+                        <p class="locked-text">A film hamarosan elérhető lesz.</p>
+                    </div>`;
+            }
+        }
+    })();
+    </script>
+</body>
+</html>

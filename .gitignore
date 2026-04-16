@@ -1,21 +1,11 @@
-# === BIZTONSÁG ===
-# Jelszavak, titkos kódok, eladott jegyek
-data/config.json
-data/jegyek.json
-
 # === NAGY MÉDIA FÁJLOK ===
-# Előzetes és film videók (nem oszthatók meg)
+# Előzetes és film videók (külön töltendők)
 elozetes/*.mp4
 elozetes/*.webm
 elozetes/*.mov
 film/*.mp4
 film/*.webm
 film/*.mov
-
-# Showcase videók (nagy méret)
-video/*.mp4
-video/*.webm
-video/*.mov
 
 # === RENDSZER ===
 .DS_Store
@@ -29,3 +19,6 @@ desktop.ini
 .vscode/
 .idea/
 *.sublime-*
+
+# === DEPLOY ZIP ===
+*.zip

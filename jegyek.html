@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jegyvásárlás – Kódolt Erő</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="favicon.svg">
+    <meta name="theme-color" content="#0a0a14">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body data-page="jegyek">
+    <div class="cyber-bg"></div>
+    <div class="grid-overlay"></div>
+
+    <div id="site-header"></div>
+
+    <main class="main-content">
+
+        <section class="hero" style="padding: 3rem 1rem;">
+            <h1 class="hero-title" style="font-size: clamp(2.5rem, 7vw, 5rem);">JEGYVÁSÁRLÁS</h1>
+            <p class="hero-subtitle">Csak családtagok számára</p>
+        </section>
+
+        <section class="section">
+            <div class="jegyek-container">
+                <div class="ticket-card">
+
+                    <div class="ticket-header">
+                        <h2 class="ticket-title">KÓDOLT ERŐ</h2>
+                        <p class="ticket-subtitle">1. évad – 1. rész: A Sötét Program</p>
+                    </div>
+
+                    <div class="ticket-info">
+                        <div class="info-item">
+                            <span class="info-label">Premier</span>
+                            <span class="info-value">2026.06.30</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Időtartam</span>
+                            <span class="info-value">20 perc</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Helyszín</span>
+                            <span class="info-value">Otthon</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Ár</span>
+                            <span class="info-value price" id="arDisplay">500 Ft</span>
+                        </div>
+                    </div>
+
+                    <div id="alertBox"></div>
+
+                    <!-- 1. LÉPÉS: NÉV -->
+                    <form id="formNev">
+                        <div class="form-group">
+                            <label class="form-label" for="nev">Add meg a neved</label>
+                            <input type="text" class="form-input" id="nev" name="nev"
+                                   placeholder="Pl: Kiss Anna" required minlength="2" autocomplete="name">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">Tovább &rarr;</button>
+                    </form>
+
+                    <!-- 2. LÉPÉS: TITKOS KÓD -->
+                    <div id="formKod" style="display: none;">
+                        <div class="alert alert-info">
+                            <strong>Szia <span id="nevKi"></span>!</strong><br>
+                            Most fizesd ki a <span id="arInfo">500</span> forintot a film készítőjének.
+                            Ezután ő beírja Neked a titkos kódot.
+                        </div>
+                        <form id="formKodInner">
+                            <div class="form-group">
+                                <label class="form-label" for="titkosKod">Titkos kód</label>
+                                <input type="password" class="form-input" id="titkosKod"
+                                       placeholder="A készítő írja be" required autocomplete="off"
+                                       style="font-family: 'Orbitron', sans-serif; letter-spacing: 4px; text-align: center;">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-full">Jegy aktiválása</button>
+                        </form>
+                        <button type="button" id="ujraGomb1" class="btn btn-secondary btn-full" style="margin-top: 1rem;">Mégse / Új név</button>
+                    </div>
+
+                    <!-- 3. LÉPÉS: FILM-KÓD -->
+                    <div id="formSiker" style="display: none;">
+                        <div class="alert alert-success">
+                            <strong>Sikeres jegyvásárlás!</strong><br>
+                            <span id="nevSiker"></span> – itt a Te film-kódod:
+                        </div>
+                        <div class="kod-display">
+                            <div class="kod-label">A Te film-kódod</div>
+                            <div class="kod" id="filmKod">ZNX-XXXXXXXX</div>
+                            <button type="button" class="btn btn-secondary" onclick="masolKod()">Másolás</button>
+                            <p class="kod-info">
+                                <strong>Őrizd meg ezt a kódot!</strong><br>
+                                Június 30-án ezzel a kóddal nézheted meg a filmet a "Film" menüpont alatt.
+                            </p>
+                        </div>
+                        <button type="button" id="ujraGomb2" class="btn btn-primary btn-full">Új jegyvásárlás</button>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="site-footer"></div>
+
+    <script src="config.js"></script>
+    <script src="site.js"></script>
+    <script>
+        let aktuälisNev = '';
+
+        document.getElementById('arDisplay').textContent = CONFIG.AR + ' Ft';
+        document.getElementById('arInfo').textContent = CONFIG.AR;
+
+        const formNev    = document.getElementById('formNev');
+        const formKod    = document.getElementById('formKod');
+        const formSiker  = document.getElementById('formSiker');
+        const alertBox   = document.getElementById('alertBox');
+
+        function showAlert(text, tipus) {
+            alertBox.innerHTML = `<div class="alert alert-${tipus}">${text}</div>`;
+            setTimeout(() => alertBox.innerHTML = '', 5000);
+        }
+
+        formNev.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nev = document.getElementById('nev').value.trim();
+            if (nev.length < 2) {
+                showAlert('Add meg a teljes nevedet (legalább 2 karakter).', 'error');
+                return;
+            }
+            aktuälisNev = nev;
+            document.getElementById('nevKi').textContent = nev;
+            formNev.style.display = 'none';
+            formKod.style.display = 'block';
+            alertBox.innerHTML = '';
+        });
+
+        document.getElementById('formKodInner').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const kod = document.getElementById('titkosKod').value;
+            const ok = await verifyTitkos(kod);
+
+            if (!ok) {
+                showAlert('Hibás titkos kód! Kérd meg a film készítőjét, hogy írja be a kódot.', 'error');
+                return;
+            }
+
+            const filmKod = await generateFilmKod(aktuälisNev);
+            document.getElementById('filmKod').textContent = filmKod;
+            document.getElementById('nevSiker').textContent = aktuälisNev;
+            formKod.style.display = 'none';
+            formSiker.style.display = 'block';
+        });
+
+        function ujrakezd() {
+            aktuälisNev = '';
+            document.getElementById('nev').value = '';
+            document.getElementById('titkosKod').value = '';
+            formKod.style.display = 'none';
+            formSiker.style.display = 'none';
+            formNev.style.display = 'block';
+            alertBox.innerHTML = '';
+        }
+
+        document.getElementById('ujraGomb1').addEventListener('click', ujrakezd);
+        document.getElementById('ujraGomb2').addEventListener('click', ujrakezd);
+
+        function masolKod() {
+            const kod = document.getElementById('filmKod').textContent.trim();
+            navigator.clipboard.writeText(kod).then(() => {
+                alert('Kód a vágólapra másolva: ' + kod);
+            }).catch(() => {
+                const ta = document.createElement('textarea');
+                ta.value = kod;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                alert('Kód másolva: ' + kod);
+            });
+        }
+    </script>
+</body>
+</html>

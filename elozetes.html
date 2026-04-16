@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Előzetes – Kódolt Erő</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="favicon.svg">
+    <meta name="theme-color" content="#0a0a14">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body data-page="elozetes">
+    <div class="cyber-bg"></div>
+    <div class="grid-overlay"></div>
+
+    <div id="site-header"></div>
+
+    <main class="main-content">
+
+        <section class="hero" style="padding: 3rem 1rem;">
+            <h1 class="hero-title" style="font-size: clamp(2.5rem, 7vw, 5rem);">ELŐZETES</h1>
+            <p class="hero-subtitle">Kódolt Erő – A Sötét Program</p>
+        </section>
+
+        <section class="section" id="content"></section>
+
+    </main>
+
+    <div id="site-footer"></div>
+
+    <script src="config.js"></script>
+    <script src="site.js"></script>
+    <script>
+    (async () => {
+        const elerheto = lejartE(CONFIG.ELOZETES);
+        const content  = document.getElementById('content');
+
+        if (!elerheto) {
+            content.innerHTML = `
+                <div class="locked-content">
+                    <div class="locked-icon">[ ZÁROLVA ]</div>
+                    <h2 class="locked-title">Az előzetes hamarosan érkezik</h2>
+                    <p class="locked-text">
+                        Az előzetes <strong style="color: var(--neon-cyan);">${formatDatum(CONFIG.ELOZETES)}</strong> időpontban jelenik meg.
+                    </p>
+                    <div class="countdown">
+                        <div class="countdown-item"><span class="countdown-number" id="el-d">--</span><span class="countdown-label">Nap</span></div>
+                        <div class="countdown-item"><span class="countdown-number" id="el-h">--</span><span class="countdown-label">Óra</span></div>
+                        <div class="countdown-item"><span class="countdown-number" id="el-m">--</span><span class="countdown-label">Perc</span></div>
+                        <div class="countdown-item"><span class="countdown-number" id="el-s">--</span><span class="countdown-label">Másodperc</span></div>
+                    </div>
+                </div>`;
+            visszaszamlal(CONFIG.ELOZETES, ['el-d','el-h','el-m','el-s']);
+            return;
+        }
+
+        // Próbáljuk megtalálni az előzetest
+        const candidates = ['elozetes/elozetes.mp4','elozetes/elozetes.webm','elozetes/elozetes.mov'];
+        let videoUrl = null;
+        for (const url of candidates) {
+            try {
+                const r = await fetch(url, { method: 'HEAD' });
+                if (r.ok) { videoUrl = url; break; }
+            } catch (e) {}
+        }
+
+        if (videoUrl) {
+            content.innerHTML = `
+                <div class="video-container">
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="${videoUrl}" type="video/mp4">
+                        </video>
+                    </div>
+                    <p style="text-align: center; margin-top: 2rem; color: var(--text-secondary);">
+                        Kíváncsi a teljes filmre? <a href="jegyek.html" style="color: var(--neon-cyan);">Vegyél jegyet most!</a>
+                    </p>
+                </div>`;
+        } else {
+            content.innerHTML = `
+                <div class="locked-content">
+                    <div class="locked-icon">[ ! ]</div>
+                    <h2 class="locked-title">Az előzetes elérhető!</h2>
+                    <p class="locked-text">A videófájl még nincs feltöltve.</p>
+                </div>`;
+        }
+    })();
+    </script>
+</body>
+</html>
