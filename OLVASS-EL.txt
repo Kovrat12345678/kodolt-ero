@@ -1,0 +1,60 @@
+==========================================
+   KÓDOLT ERŐ – Weboldal használati útmutató
+==========================================
+
+INDÍTÁS:
+1. XAMPP Control Panel → Apache → Start
+2. Böngészőben: http://localhost/Zynox%20film/
+
+OLDALAK:
+--------
+- Főoldal:        http://localhost/Zynox%20film/
+- Karakterek:     http://localhost/Zynox%20film/karakterek.php
+- Előzetes:       http://localhost/Zynox%20film/elozetes.php
+- Jegyvásárlás:   http://localhost/Zynox%20film/jegyek.php
+- Film:           http://localhost/Zynox%20film/film.php
+- ADMIN:          http://localhost/Zynox%20film/admin.php
+
+FONTOS BEÁLLÍTÁSOK (admin.php-n keresztül):
+-------------------------------------------
+- Admin alap jelszó:   admin123
+- Titkos kód alapból:  ZYNOX2026
+- Premier dátum:       2026-06-30 19:00
+- Előzetes dátum:      2026-05-31 19:00
+- Ár:                  500 Ft
+
+VÁLTOZTASD MEG ezeket az admin felületen vagy a
+data/config.json fájlban!
+
+JEGYVÁSÁRLÁS FOLYAMATA:
+-----------------------
+1. A családtag beírja a nevét a jegyek.php oldalon
+2. A rendszer kéri a "titkos kódot"
+3. TE beírod a titkos kódot (ZYNOX2026 alapból),
+   miután kifizették az 500 Ft-ot itthon
+4. A rendszer ad egy egyedi film-kódot (pl. ZNX-A1B2C3D4)
+5. Június 30-án a film.php oldalon ezzel néznek filmet
+
+VIDEÓK FELTÖLTÉSE:
+------------------
+- Előzetes: tedd a "elozetes/elozetes.mp4" fájlt
+- Film:     tedd a "film/film.mp4" fájlt
+
+A weboldal automatikusan felismeri és megjeleníti
+(az előzetest május 31-től, a filmet június 30-tól).
+
+KARAKTER KÉPEK:
+---------------
+A "karakter képek" mappában vannak. Ha új képet
+adsz hozzá, módosítsd a karakterek.php fájlt.
+
+ADMIN FELÜLET:
+--------------
+Itt látod az eladott jegyeket, módosíthatod a kódot,
+az árat és a dátumokat.
+A bevételt is mutatja!
+
+JEGYEK ADATBÁZIS:
+-----------------
+data/jegyek.json – itt vannak az eladott jegyek
+data/config.json – beállítások

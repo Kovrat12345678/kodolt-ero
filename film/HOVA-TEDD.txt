@@ -1,0 +1,15 @@
+FILM VIDEÓ
+==========
+
+Amikor kész lesz a film (június 30.), másold ide a videó fájlt
+és nevezd át "film.mp4"-re.
+
+A weboldal automatikusan felismeri és csak az érvényes
+film-kóddal rendelkezőknek mutatja.
+
+Támogatott formátumok:
+- film.mp4 (ajánlott)
+- film.webm
+- film.mov
+
+Ezt a TXT fájlt nyugodtan törölheted.

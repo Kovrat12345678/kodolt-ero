@@ -1,0 +1,14 @@
+ELŐZETES VIDEÓ
+==============
+
+Amikor kész lesz az előzetes (május 31.), másold ide a videó fájlt
+és nevezd át "elozetes.mp4"-re.
+
+A weboldal automatikusan felismeri és megjeleníti.
+
+Támogatott formátumok:
+- elozetes.mp4 (ajánlott)
+- elozetes.webm
+- elozetes.mov
+
+Ezt a TXT fájlt nyugodtan törölheted.
